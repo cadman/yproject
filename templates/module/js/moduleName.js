@@ -1,14 +1,15 @@
+/**
+Enter a description for the <%= moduleName %> module
+
+@module <%= moduleName %>
++*/
 
 /**
- * Enter a description for the <%= moduleName %> module
- * @module <%= moduleName %>
- */
+Enter a description for the <%= moduleName %> class
 
-/**
- * Enter a description for the <%= moduleName %> class
- * @class <%= moduleName %>
- * @constructor
- */
+@class <%= moduleName %>
+@constructor
+**/
 <%= moduleName %> = function() {};
 
 <%= moduleName %>.prototype = {

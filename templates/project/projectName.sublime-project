@@ -1,0 +1,9 @@
+{
+	"folders":
+	[
+		{
+			"path": "~/Sites/<%= projectName %>",
+			"folder_exclude_patterns": ["media","skin"]
+		}
+	]
+}

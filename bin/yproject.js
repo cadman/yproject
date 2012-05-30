@@ -59,12 +59,12 @@ yproject = {
 				return;
 			}
 			// Retrieve the project name:
-			var data = fs.readFileSync('src/build.xml', encoding="utf8");
+			var data = fs.readFileSync('lib/src/build.xml', encoding="utf8");
 			
 			var parser = new xml2js.Parser();
 			parser.addListener('end', function(result) {
 				var projectName = result["@"]["name"];
-				yproject.copyDirSyncRecursive( __dirname+'/../templates/widget', 'src/'+moduleName, {projectName: projectName, moduleName: moduleName});
+				yproject.copyDirSyncRecursive( __dirname+'/../templates/widget', 'lib/src/'+moduleName, {projectName: projectName, moduleName: moduleName});
 				
 				console.log("Done !");
 				console.log("Now edit the build.properties file to set the correct path to the builder");
@@ -86,12 +86,12 @@ yproject = {
 			}
 			
 			// Retrieve the project name:
-			var data = fs.readFileSync('src/build.xml', encoding="utf8");
+			var data = fs.readFileSync('lib/src/build.xml', encoding="utf8");
 			
 			var parser = new xml2js.Parser();
 			parser.addListener('end', function(result) {
 				var projectName = result["@"]["name"];
-				yproject.copyDirSyncRecursive( __dirname+'/../templates/module', 'src/'+moduleName, {projectName: projectName, moduleName: moduleName});
+				yproject.copyDirSyncRecursive( __dirname+'/../templates/module', 'lib/src/'+moduleName, {projectName: projectName, moduleName: moduleName});
 				
 				console.log("Done !");
 				console.log("Now edit the build.properties file to set the correct path to the builder");

@@ -1,0 +1,15 @@
+{
+	"name": "<%= projectName %>",
+	"description": "",
+	"version": "0.1.0",
+	"url": "http://localhost/<%= projectName %>/lib/docs",
+	"logo": "http://yuilibrary.com/img/yui-logo.png",
+	"options": {
+		"external": {
+			"data": "http://yuilibrary.com/yui/docs/api/data.json"
+		},
+		"linkNatives": "true",
+		"attributesEmit": "true",
+		"outdir": "../docs"
+	}
+}
