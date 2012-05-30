@@ -1,10 +1,10 @@
 .DS_Store
+.com.apple.timemachine.supported
 .*.swp
 .svn
 *~
 *.bbprojectd
 *.sublime-workspace
-src/build.log
-.com.apple.timemachine.supported
 node_modules
+lib/src/build.log
 lib/build/

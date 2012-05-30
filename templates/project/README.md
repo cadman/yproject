@@ -4,7 +4,7 @@ EDIT ME
 
 ## Build
 
-Assuming you have the yui builder installed at the same directory level than this project:
+Assuming you have the YUI Builder installed at the same directory level than this project:
 
     cd lib/src
     ant all
@@ -16,16 +16,14 @@ Or you can build components one by one:
 
 ## Documentation
 
-To build the documentation for this project go to the lib source tree
+Assuming you have the YUI Doc installed go to the lib source tree:
 
     cd lib/src
 
-Build the documentation by this command:
+Build the documentation into lib/docs by this command:
 
     yuidoc .
 
-Documentation will be build into lib/docs.
-
-To run documentation in server mode use:
+To run documentation in server mode for testing use:
 
 	yuidoc --server .

@@ -1,8 +1,9 @@
 /**
-FIXME: Enter a description for the <%= moduleName %> module
+Enter a description for the <%= moduleName %> module
 
 @module <%= moduleName %>
 **/
+var <%= moduleName.camelize() %>;
 
 /**
 Enter a description for the <%= moduleName.camelize() %> class
@@ -11,7 +12,7 @@ Enter a description for the <%= moduleName.camelize() %> class
 @extends Widget
 @constructor
 **/
-var <%= moduleName.camelize() %> = Y.Base.create("<%= moduleName.camelize(true) %>", Y.Widget, [/*Y.WidgetParent*/], {
+<%= moduleName.camelize() %> = Y.Base.create("<%= moduleName.camelize(true) %>", Y.Widget, [/*Y.WidgetParent*/], {
 
 	/**
 	Description
@@ -50,12 +51,10 @@ var <%= moduleName.camelize() %> = Y.Base.create("<%= moduleName.camelize(true) 
 	to create or insert new elements into the DOM.
 	
 	@method renderUI
-	@param {type} name description
-	@return {type} description
 	**/
 	renderUI: function() {
 
-		// this._mynode = Node.create(Y.substitute(<%= moduleName.camelize() %>.MYNODE_TEMPLATE, {mynodeid: this.get("id") + "_mynode"})); 
+		//this._mynode = Node.create(Y.substitute(<%= moduleName.camelize() %>.MYNODE_TEMPLATE, {mynodeid: this.get("id") + "_mynode"})); 
 	},
 
 	/**
@@ -65,7 +64,7 @@ var <%= moduleName.camelize() %> = Y.Base.create("<%= moduleName.camelize(true) 
 	**/
 	bindUI: function() {
 	
-		// this.after("attrAChange", this._afterAttrAChange);
+		//this.after("attrAChange", this._afterAttrAChange);
 	},
 
 	/**
@@ -75,13 +74,13 @@ var <%= moduleName.camelize() %> = Y.Base.create("<%= moduleName.camelize(true) 
 	**/
 	syncUI: function() {
 
-		// this._uiSetAttrA(this.get("attrA"));
+		//this._uiSetAttrA(this.get("attrA"));
 
 	} //,
 
 	// Beyond this point is the <%= moduleName.camelize() %> specific application and rendering logic
 
-	// Attribute state supporting methods (see attribute config above) 
+	// Attribute state supporting methods
 
 	/*
 
