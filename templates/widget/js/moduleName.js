@@ -12,17 +12,25 @@ Enter a description for the <%= moduleName.camelize() %> class
 @extends Widget
 @constructor
 **/
-<%= moduleName.camelize() %> = Y.Base.create("<%= moduleName.camelize(true) %>", Y.Widget, [/*Y.WidgetParent*/], {
+<%= moduleName.camelize() %> = Y.Base.create('<%= moduleName.camelize(true) %>', Y.Widget, [/*Y.WidgetParent*/], {
+
+	/**
+	A copy of the module's localized resources
+	
+	@property resources
+	@type Object
+	@default null
+	**/
 
 	/**
 	Description
 	
 	@method initializer
 	**/
-	initializer: function() {
+	initializer: function () {
 
 		// Get localized strings in the current language
-		this.resources = Y.Intl.get("<%= moduleName %>");
+		this.resources = Y.Intl.get('<%= moduleName %>');
 
 		/*this.publish("myEvent", {
 			defaultFn: this._defMyEventFn,
@@ -35,7 +43,7 @@ Enter a description for the <%= moduleName.camelize() %> class
 	
 	@method destructor
 	**/
-	destructor: function() {
+	destructor: function () {
 		
 	},
 
@@ -52,7 +60,7 @@ Enter a description for the <%= moduleName.camelize() %> class
 	
 	@method renderUI
 	**/
-	renderUI: function() {
+	renderUI: function () {
 
 		//this._mynode = Node.create(Y.substitute(<%= moduleName.camelize() %>.MYNODE_TEMPLATE, {mynodeid: this.get("id") + "_mynode"})); 
 	},
@@ -62,7 +70,7 @@ Enter a description for the <%= moduleName.camelize() %> class
 	
 	@method bindUI
 	**/
-	bindUI: function() {
+	bindUI: function () {
 	
 		//this.after("attrAChange", this._afterAttrAChange);
 	},
@@ -72,7 +80,7 @@ Enter a description for the <%= moduleName.camelize() %> class
 	
 	@method syncUI
 	**/
-	syncUI: function() {
+	syncUI: function () {
 
 		//this._uiSetAttrA(this.get("attrA"));
 
@@ -84,43 +92,43 @@ Enter a description for the <%= moduleName.camelize() %> class
 
 	/*
 
-	_defAttrAVal: function() {
+	_defAttrAVal: function () {
 		// this.get("id") + "foo";
 	},
 
-	_setAttrA: function(attrVal, attrName) {
+	_setAttrA: function (attrVal, attrName) {
 		// return attrVal.toUpperCase();
 	},
 
-	_getAttrA: function(attrVal, attrName) {
+	_getAttrA: function (attrVal, attrName) {
 		// return attrVal.toUpperCase();
 	},
 
-	_validateAttrA: function(attrVal, attrName) {
+	_validateAttrA: function (attrVal, attrName) {
 		// return Lang.isString(attrVal);
 	},
 
 	// Listeners, UI update methods
 
-	_afterAttrAChange: function(e) {
+	_afterAttrAChange: function (e) {
 		// Listens for changes in state, and asks for a UI update (controller). 
 
 		// this._uiSetAttrA(e.newVal);
 	},
 
-	_uiSetAttrA: function(val) {
+	_uiSetAttrA: function (val) {
 		// Update the state of attrA in the UI (view) 
 
 		// this._mynode.set("innerHTML", val);
 	},
 
-	_defMyEventFn: function(e) {
+	_defMyEventFn: function (e) {
 		// The default behavior for the "myEvent" event.
 	}
 
 	*/
 
-},{
+}, {
 
 	ATTRS: {
 		

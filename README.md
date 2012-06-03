@@ -1,175 +1,197 @@
 # yproject
 
-yproject is a command-line utility to scaffold projects and components using the YUI3 library and the [YUI Build Tool](http://yuilibrary.com/projects/builder)
+yproject is a command-line utility to scaffold projects and components using the YUI3 library, the [YUI Build Tool](http://yuilibrary.com/projects/builder) and the [YUIDoc](http://yui.github.com/yuidoc).
 
 It contains a project template and a module template to quickly bootstrap your project enforcing best practices from the start.
 
 ## Features
 
- * command to scaffold a project
- * command to scaffold a new module
- * command to scaffold a widget (with intl and skin files)
+* command to scaffold a project
+* command to scaffold a new module group
+* command to scaffold a new module
+* command to scaffold a new widget (with intl and skin files)
 
-The generated projects include :
+The generated projects include:
 
- * default loader module to generate the YUI3 modules metadata with building script
- * development HTTP server using express.js to run tests
+* default loader module to generate the YUI3 modules metadata with building script
+* development HTTP server using express.js to run tests
 
 Through YUI Builder 
 
- * ANT based build system YUI uses
- * Declare module dependencies for the YUI loader
- * Code checking with JSlint
- * code & assets minification with YUI Compressor
- 
-Through YUI Doc
+* ANT based build system YUI uses
+* Declare module dependencies for the YUI loader
+* Code checking with JSlint
+* Code & assets minification with YUI Compressor
 
- * Documentation: customizable script to generate the API documentation
- 
+Through YUIDoc
+
+* Live previews. YUIDoc includes a standalone doc server, making it trivial to preview your docs as you write.
+* YUIDoc's generates documentation as an attractive, functional web application with real URLs and graceful fallbacks for spiders and other agents that can't run JavaScript.
+* Wide language support. You can use it with any language that supports /* */ comment blocks.
+
 Through YUI Test
 
- * Test Driven Development (TDD) : YUI Test, Selenium
- * YUI Test instrumentation script => Test coverage !
- * Selenium scripts to launch the tests
- * easy Continuous Integration with Hudson
- 
- * Think there's too much? The generated project is delete-key friendly. :)
+* Test Driven Development (TDD) : YUI Test, Selenium
+* YUI Test instrumentation script => Test coverage !
+* Selenium scripts to launch the tests
+* easy Continuous Integration with Hudson
+
+* Think there's too much? The generated project is delete-key friendly. :)
 
 ## Installation
 
-    npm install yproject
+Install it as a developer:
 
-Or install it as a developer :
-
-    git clone git://github.com/neyric/yproject.git
-    cd yproject
-    npm link .
+	git clone git://github.com/cadman/yproject.git
+	cd yproject
+	npm link .
 
 
 ## Usage
 
 ### Create a new project
 
-    yproject create myproject
-    
-This will create the following structure :
+	yproject create myproject
+		
+This will create the following structure:
 
-    myproject/
-       api/
-       build/
-       lib/
-       README.md/
-       scripts/
-       src/
-          myproject-loader/
+	myproject/
+		.gitignore
+		index.html
+		lib/
+			src/
+				build.xml
+				yuidoc.json
+			meta-loader.php
+		media/
+		projectName.sublime-project
+		README.md
+		scripts/
+		tests/
+			index.html
+
+### Adding a group
+
+Go to your project directory and type:
+
+	yproject group my-group
+
+This will create the following structure in lib/src/:
+
+	my-group/
+		build.xml
+		js/
+		tests/
 
 ### Adding a module
 
-Go to your project directory and type :
+Go to your project directory and type:
 
-    yproject module mymodule 
+	yproject module my-module 
 
-This will create the following structure in src/ :
+This will create the following structure in lib/src/:
 
-    mymodule/
-       build.xml
-       build.properties
-       src/
-          mymodule.js
-       tests/
-          index.html
+	my-module/
+		build.my-module.properties
+		build.my-module.xml
+		build.xml
+		js/
+			my-module.js
+		tests/
+			my-module.html
+
+If you want the module to be part of a group then type:
+
+	yproject module my-group my-module
+
+This will add the module structure to your group and preserve already existing files.
 
 ### Adding a widget
 
-Go to your project directory and type :
+Go to your project directory and type:
 
-    yproject widget my-widget
+	yproject widget my-widget
 
-This will create the following structure in src/ :
+This will create the following structure in lib/src/:
 
-    my-widget/
-       assets/
-          my-widget-core.css
-          skins/
-             sam/
-                my-widget-skin.css
-       build.xml
-       build.properties
-       lang/
-          my-widget.js
-          my-widget_fr.js
-       src/
-          my-widget.js
-       tests/
-          index.html
+	my-widget/
+		assets/
+			my-widget-core.css
+			skins/
+				sam/
+					my-widget-skin.css
+		build.my-widget.properties
+		build.my-widget.xml
+		build.xml
+		js/
+			my-widget.js
+		lang/
+			my-widget_de.js
+			my-widget.js
+		tests/
+			my-module.html
+
+If you want the widget to be part of a group then type:
+
+	yproject widget my-group my-widget
+
+This will add the widget structure to your group and preserve already existing files.
 
 The generated widget is skinable and internationalizable by default.
 
 ### Building
 
-You will need the [YUI Build Tool](http://yuilibrary.com/projects/builder) (which itself requires java & ant)
+You will need the [YUI Builder](http://yuilibrary.com/projects/builder) (which itself requires java & ant)
 
-To build a specific module :
+To build a specific module:
 
-    cd src/mymodule
-    ant all
+	cd lib/src/my-module
+	ant all
 
-To build all modules :
+To build all modules:
 
-    cd src
-    ant all
+	cd lib/src
+	ant all
 
-### Default loader module
+### Meta loader
 
-A special module is created when you create a new project (ex: "myproject-loader"), which adds your module definitions to the YUI loader utility.
-
-The YUI 3 component uses a [python script](https://github.com/yui/yui3/blob/master/src/loader/meta_join.py) to generate the JSON metadata from the src/*/meta/*.json files. 
-
-However, I noticed that in most projects or librairies, we can generate directly generate this JSON from the build.properties file.
-
-The generated module contains a meta_join.ssjs script, which is called by the build.xml file.
-It requires node.js.
-
-(Note: the ssjs extension is to prevent YUI Doc to include this file in the API documentation)
+In lib/src you find the meta-loader.php. This file generates the Loader Metadata from the */build.*.properties files in the lib/src/ folder.
 
 ### Documentation
 
-To build the documentation, you will need [YUI Doc](http://developer.yahoo.com/yui/yuidoc/)
+To build the documentation, you will need a copy of [YUI Doc](http://yui.github.com/yuidoc) installed on your system.
 
-A script is installed into the project directory (scripts/apidoc.sh)
+You build the documentation of your project simply by going to lib/src/ and typing:
 
- * it expects YUI Doc to be found at the same directory level as your project.
- * it defaults to the "Dana" theme template, also expected at the same directory level
+	yuidoc .
 
-You can change those, as well as other options (such as the project's version, name, url, ...) by editing the scripts/apidoc.sh file.
+Documentation will be build into lib/docs.
 
-(Note: I suggest you use the webpro fork of the Dana theme, which fixes some bugs https://github.com/webpro/yuidoc-theme-dana )
+To run documentation in server mode for testing use:
 
-(Note: make sure that the template directory isn't a git repository, because YUI Doc doesn't like that. rm -rf .git)
-
+	yuidoc --server .
 
 ### Local server
 
-    cd scripts
-    node server.js
+	cd scripts
+	node server.js
 
 ### Testing
 
-If you're not familiar with YUI Test, I suggest you take a look at those videos :
+If you're not familiar with YUI Test, I suggest you take a look at those videos:
 
- * http://developer.yahoo.com/yui/theater/video.php?v=adams-yuiconf2009-testing
- * http://developer.yahoo.com/yui/theater/video.php?v=yuiconf2010-yuitest
+* http://developer.yahoo.com/yui/theater/video.php?v=adams-yuiconf2009-testing
+* http://developer.yahoo.com/yui/theater/video.php?v=yuiconf2010-yuitest
 
 YUI Test
 
- * Write Tests using YUI test. 
- * The generated modules contains a default test, which uses the instrumented code
+* Write Tests using YUI test. 
+* The generated modules contains a default test, which uses the instrumented code
 
 Selenium
 
- * run scripts/gen_tests_xml.js => generates the tests.xml file to launch selenium tests
- * Automatically save test results
-
+* run scripts/gen_tests_xml.js => generates the tests.xml file to launch selenium tests
+* Automatically save test results
 
 ## Full example
 

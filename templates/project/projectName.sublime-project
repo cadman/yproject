@@ -5,5 +5,17 @@
 			"path": "~/Sites/<%= projectName %>",
 			"folder_exclude_patterns": ["media","skin"]
 		}
+	],
+	"build_systems":[
+		{
+			"name": "YUI Builder Library",
+			"cmd": ["ant"],
+			"working_dir": "$project_path/lib/src/"
+		},
+		{
+			"name": "YUI Builder Module",
+			"cmd": ["ant"],
+			"working_dir": "$file_path/../"
+		}
 	]
 }

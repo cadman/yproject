@@ -1,18 +1,21 @@
 #!/usr/bin/env node
 
-var fs = require("fs"), ejs = require("ejs"), xml2js = require("xml2js");
+var path = require("path"),
+	fs = require("fs"),
+	ejs = require("ejs"),
+	xml2js = require("xml2js");
 
-// "widget-parent".camelize() -> "WidgetParent"
 if(!String.prototype.camelize) {
 	/**
 	Camelizes a string
 
 	@example
-		"my-widget".camelize() => "myWidget"
+		"my-widget".camelize() => "MyWidget"
+		"my-widget".camelize(true) => "myWidget"
 	
 	@method camelize
 	@extends String
-	@param {boolean} lowFirstLetter Whether firt letter should be uppercase or not
+	@param {boolean} lowFirstLetter Whether first letter should be lowercase or not
 	@return {String} Camelized String
 	**/
 	String.prototype.camelize = function (lowFirstLetter) {
@@ -61,13 +64,38 @@ yproject = {
 		},
 		
 		/**
-		Create command to create a widget from templates/widget
+		Group command to create a group from templates/group
+
+		@method group
+		**/
+		group: function (arglist) {
+			var moduleName = arglist[0];
+
+			if(!moduleName) {
+				console.log("ERR: Missing module name");
+				this.help();
+				return;
+			}
+
+			yproject.createFromTemplate('group', moduleName, null);
+			
+		},
+
+		/**
+		Widget command to create a widget from templates/widget
 
 		@method widget
 		**/
 		widget: function (arglist) {
-			var moduleName = arglist[0],
-				data, parser;
+			var moduleName, moduleGroup;
+
+			if (arglist.length > 1) {
+				moduleGroup = arglist[0];
+				moduleName = arglist[1];
+			} else {
+				moduleGroup = null;
+				moduleName = arglist[0];
+			}
 
 			if(!moduleName) {
 				console.log("ERR: Missing module name");
@@ -75,48 +103,33 @@ yproject = {
 				return;
 			}
 
-			// Retrieve the project name:
-			data = fs.readFileSync("lib/src/build.xml", encoding = "utf8");
-			
-			parser = new xml2js.Parser();
-			parser.addListener("end", function (result) {
-				var projectName = result["@"]["name"];
-				yproject.copyDirSyncRecursive(__dirname + "/../templates/widget", "lib/src/" + moduleName, {projectName: projectName, moduleName: moduleName});
-				
-				console.log("Done !");
-				console.log("Now edit the build.properties file to set the correct path to the builder");
-				
-			});
-			parser.parseString(data);
+			yproject.createFromTemplate('widget', moduleName, moduleGroup);
 			
 		},
 		
 		/**
-		Create command to create a module from templates/module
+		Module command to create a module from templates/module
 
 		@method module
 		**/
 		module: function (arglist) {
-			var moduleName = arglist[0],
-				data, parser;
+			var moduleName, moduleGroup;
+
+			if (arglist.length > 1) {
+				moduleGroup = arglist[0];
+				moduleName = arglist[1];
+			} else {
+				moduleGroup = null;
+				moduleName = arglist[0];
+			}
+
 			if(!moduleName) {
 				console.log("ERR: Missing module name");
 				this.help();
 				return;
 			}
 			
-			// Retrieve the project name:
-			data = fs.readFileSync("lib/src/build.xml", encoding = "utf8");
-			
-			parser = new xml2js.Parser();
-			parser.addListener("end", function (result) {
-				var projectName = result["@"]["name"];
-				yproject.copyDirSyncRecursive(__dirname + "/../templates/module", "lib/src/" + moduleName, {projectName: projectName, moduleName: moduleName});
-				
-				console.log("Done !");
-				console.log("Now edit the build.properties file to set the correct path to the builder");
-			});
-			parser.parseString(data);
+			yproject.createFromTemplate('module', moduleName, moduleGroup);
 			
 		},
 		
@@ -127,13 +140,55 @@ yproject = {
 		**/
 		help: function (arglist) {
 			console.log("Usage:");
-			console.log("\t'yproject create myproject'\tCreate a project from scratch");
-			console.log("\t'yproject module mymodule'\tAdd a module to the current project");
+			console.log("\t'yproject create my-project'\tCreate a project from scratch");
+			console.log("\t'yproject group my-group'\Add a group to the current project");
+			console.log("\t'yproject module my-module'\tAdd a module to the current project");
+			console.log("\t'yproject module my-group my-submodule'\tAdd a submodule to a group of the current project");
 			console.log("\t'yproject widget my-widget'\tAdd a widget module to the current project");
+			console.log("\t'yproject widget my-group my-widget'\tAdd a widget module to a group of the current project");
 		}
 		
 	},
 	
+	/**
+	Creates new folder for module in lib/src from corresponding template folder of current module type
+	
+	@method createFromTemplate
+	@param {String} template Name of the template folder
+	@param {String} moduleName Name of the module to create
+	**/
+	createFromTemplate: function (template, moduleName, moduleGroup) {
+		var data = fs.readFileSync("lib/src/build.xml", encoding = "utf8"),
+			parser = new xml2js.Parser(),
+			moduleNamespaced = [],
+			dir;
+
+		if (moduleGroup && typeof moduleGroup === "string" && moduleGroup !== "") {
+			moduleNamespaced.push(moduleGroup);
+		} else {
+			moduleGroup = "";
+		}
+
+		moduleNamespaced.push(moduleName);
+
+		dir = moduleNamespaced[0];
+
+		parser.addListener("end", function (result) {
+			var locals = {
+				projectName: result["@"]["name"],
+				moduleGroup: moduleGroup,
+				moduleNamespaced: moduleNamespaced.join("-"),
+				moduleName: moduleName
+			};
+			yproject.copyDirSyncRecursive(__dirname + "/../templates/" + template, "lib/src/" + dir, locals);
+			
+			console.log("Done !");
+			console.log("Now edit the build.properties file to set the correct path to the builder\n");
+			
+		});
+		parser.parseString(data);
+	},
+
 	/**
 	Copies the source directory recirsively to new location and replaces all placeholders for locals
 	
@@ -147,13 +202,17 @@ yproject = {
 		var checkDir = fs.statSync(sourceDir),
 			newDirLocation = newLocation,
 			files, currFile, origFile, tpl, contents, fName, f, k, i, l;
-
+		
 		for(k in locals) {
 			newDirLocation = newDirLocation.replace(k, locals[k]);
 		}
 		
-		fs.mkdirSync(newDirLocation, checkDir.mode);
-		console.log("Create " + newDirLocation);
+		if (!path.existsSync(newDirLocation)) {
+			fs.mkdirSync(newDirLocation, checkDir.mode);
+			console.log("Created " + newDirLocation);
+		} else {
+			console.log("Not modified existing " + newDirLocation);
+		}
 
 		files = fs.readdirSync(sourceDir);
 
@@ -165,18 +224,24 @@ yproject = {
 			if(currFile.isDirectory()) {
 				this.copyDirSyncRecursive(origFile, newDirLocation + "/" + files[i], locals);
 			} else {
-				tpl = fs.readFileSync(origFile, encoding = "utf8");
-	
-				contents = ejs.render(tpl, {locals: locals});
 
 				fName = files[i];
 				for (l in locals) {
-					fName = fName.replace(l, locals[k]);
+					fName = fName.replace(l, locals[l]);
 				}
 
 				f = newDirLocation + "/" + fName;
-				fs.writeFileSync(f, contents, encoding = "utf8");
-				console.log("Created " + f);
+
+				if (!path.existsSync(f)) {
+					tpl = fs.readFileSync(origFile, encoding = "utf8");
+	
+					contents = ejs.render(tpl, {locals: locals});
+
+					fs.writeFileSync(f, contents, encoding = "utf8");
+					console.log("Created " + f);
+				} else {
+					console.log("Not modified existing " + f);
+				}
 			}
 		}
 	}
