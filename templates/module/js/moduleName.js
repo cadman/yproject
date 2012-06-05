@@ -1,3 +1,5 @@
+"use strict";
+
 /**
 Enter a description for the <%= moduleName %> module
 
