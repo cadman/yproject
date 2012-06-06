@@ -8,3 +8,4 @@
 node_modules
 lib/src/build.log
 lib/build/
+build_tmp
