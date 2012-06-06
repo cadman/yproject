@@ -1,0 +1,38 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="de"> <![endif]-->
+<!--[if IE 7]>    <html class="lt-ie9 lt-ie8" lang="de"> <![endif]-->
+<!--[if IE 8]>    <html class="lt-ie9" lang="de"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="de"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+
+	<title><%= projectName %> – <%= moduleName %></title>
+
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width">
+
+	<link rel="stylesheet" href="../../../../css/style.css">
+
+</head>
+<body>
+	<div class="content">
+
+		<h1><%= moduleName %></h1>
+
+		<p>Place your <%= moduleName %> demo here.</p>
+
+	</div>
+
+	<script src="http://yui.yahooapis.com/3.5.1/build/yui/yui-min.js"></script>
+	<script src="../../../../lib/meta-loader.php?name=<%= projectName %>&filter=debug&combine=false"></script>
+	<script>
+		YUI().use('<%= moduleName %>', function (Y) {
+
+			var <%= moduleName.camelize(true) %> = new Y.<%= moduleName.camelize() %>({
+				
+			});
+
+		});
+	</script>
+</body>
+</html>
