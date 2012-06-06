@@ -28,18 +28,11 @@
 	</div>
 
 	<script src="http://yui.yahooapis.com/3.5.1/build/yui/yui-min.js"></script>
-	<script><?php
-		require_once('lib/meta-loader.php');
-		meta_loader('<%= projectName %>', '', array(
-			'filter' => 'debug',
-			'combine' => false
-		), 'lib/src/');
-	?></script>
-
+	<script src="lib/meta-loader.php?name=<%= projectName %>&filter=debug&combine=false"></script>
 	<script>
 		YUI().use('*', function (Y) {
-		    
 
+			
 
 		});
 	</script>

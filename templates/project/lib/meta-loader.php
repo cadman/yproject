@@ -1,5 +1,22 @@
 <?php
-	
+
+	define('LIB_PATH', ( isset($_SERVER['SCRIPT_FILENAME']) ) ? preg_replace( '/[^\/]*.php/', '', $_SERVER['SCRIPT_FILENAME'] ) . 'src/' : 'src/' );
+	define('LIB_ROOT', ( isset($_SERVER['REQUEST_URI']) ) ? preg_replace( '/[^\/]*.php/', '', current( explode( '?', $_SERVER['REQUEST_URI'] ) ) ) : '' );
+
+	$name = 'local';
+
+	$local = false;
+
+	$defaults = array(
+		'filter' => 'min',
+		'base' => LIB_ROOT . 'build/',
+		'comboBase' => LIB_ROOT . 'combo.php?',
+		'root' => 'build/',
+		'combine' => true
+	);
+
+	$booleans = array('combine');
+
 	function get_module_meta_value($key, $string) {
 		$found = preg_match('/^'.$key.'=(.*)\n/m', $string, $matches);
 		if ($found == 1) {
@@ -128,24 +145,33 @@
 
 	}
 
-	function meta_loader($name = 'local', $root = '', $config = array(), $lib = './src/', $local = false) {
-		$defaults = array(
-			'filter' => 'min',
-			'base' => $root.'lib/build/',
-			'comboBase' => $root.'lib/combo.php?',
-			'root' => 'build/',
-			'combine' => true
-		);
-		$group = array_merge($defaults,$config);
-		$group['modules'] = get_modules($lib, $local);
-?>
-
-	if (typeof YUI_config === 'undefined') {
-		YUI_config = {groups: {}};
+	header('Content-type: application/x-javascript');
+	
+	$config = array();
+	
+	if (isset($_GET)) {
+		if (isset($_GET['name'])) {
+			$name = $_GET['name'];
+		}
+		if (isset($_GET['local'])) {
+			$local = $_GET['local'];
+		}
+		foreach ($defaults as $key => $value) {
+			if (isset($_GET[$key])) {
+				if (in_array($key, $booleans)) {
+					$config[$key] = ($_GET[$key] == 'true') ? true : false ;
+				} else {
+					$config[$key] = $_GET[$key];
+				}
+			}
+		}
 	}
-	YUI_config.groups['<?php echo $name; ?>'] = <?php echo json_encode($group); ?>;
-
-<?php
-	}
+	
+	$group = array_merge($defaults, $config);
+	$group['modules'] = get_modules(LIB_PATH, $local);
 
 ?>
+if (typeof YUI_config === 'undefined') {
+	YUI_config = {groups: {}};
+}
+YUI_config.groups[<?php echo json_encode($name); ?>] = <?php echo json_encode($group); ?>;
