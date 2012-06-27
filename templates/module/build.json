@@ -1,0 +1,10 @@
+{
+	"name"        : "<%= moduleName %>",
+	"type"        : "js",
+	"sourceFiles" : ["<%= moduleName %>.js"],
+	"details" : {
+		//"lang"      : ["de"],
+		//"skinnable" : true,
+		"requires"  : ["base"]
+	}
+}
