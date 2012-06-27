@@ -15,7 +15,7 @@ Enter a description for the <%= moduleName.camelize() %> class
 @extends Widget
 @constructor
 **/
-<%= moduleName.camelize() %> = Y.Base.create('<%= moduleName.camelize(true) %>', Y.Widget, [/*Y.WidgetParent*/], {
+<%= moduleName.camelize() %> = Y.Base.create("<%= moduleName.camelize(true) %>", Y.Widget, [/*Y.WidgetParent*/], {
 
 	/**
 	A copy of the module's localized resources
@@ -33,7 +33,7 @@ Enter a description for the <%= moduleName.camelize() %> class
 	initializer: function () {
 
 		// Get localized strings in the current language
-		this.resources = Y.Intl.get('<%= moduleName %>');
+		this.resources = Y.Intl.get("<%= moduleName %>");
 
 		/*this.publish("myEvent", {
 			defaultFn: this._defMyEventFn,

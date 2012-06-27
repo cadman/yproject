@@ -15,7 +15,7 @@ Enter a description for the <%= moduleName %> class
 @extends Base
 @constructor
 **/
-<%= moduleName.camelize() %> = Y.Base.create('<%= moduleName.camelize(true) %>', Y.Base, [], {
+<%= moduleName.camelize() %> = Y.Base.create("<%= moduleName.camelize(true) %>", Y.Base, [], {
 	
 	/**
 	Description
