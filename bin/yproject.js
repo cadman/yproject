@@ -132,6 +132,32 @@ yproject = {
 			yproject.createFromTemplate('module', moduleName, moduleGroup);
 			
 		},
+
+		/**
+		CSS command to create a CSS module from templates/css
+
+		@method css
+		**/
+		css: function (arglist) {
+			var moduleName, moduleGroup;
+
+			if (arglist.length > 1) {
+				moduleGroup = arglist[0];
+				moduleName = arglist[1];
+			} else {
+				moduleGroup = null;
+				moduleName = arglist[0];
+			}
+
+			if(!moduleName) {
+				console.log("ERR: Missing module name");
+				this.help();
+				return;
+			}
+			
+			yproject.createFromTemplate('css', moduleName, moduleGroup);
+			
+		},
 		
 		/**
 		Help command to get hints on usage
@@ -146,6 +172,8 @@ yproject = {
 			console.log("\t'yproject module my-group my-submodule'\tAdd a submodule to a group of the current project");
 			console.log("\t'yproject widget my-widget'\tAdd a widget module to the current project");
 			console.log("\t'yproject widget my-group my-widget'\tAdd a widget module to a group of the current project");
+			console.log("\t'yproject css my-css'\tAdd a css module to the current project");
+			console.log("\t'yproject css my-group my-css'\tAdd a css module to a group of the current project");
 		}
 		
 	},
@@ -158,10 +186,20 @@ yproject = {
 	@param {String} moduleName Name of the module to create
 	**/
 	createFromTemplate: function (template, moduleName, moduleGroup) {
-		var data = fs.readFileSync("lib/src/build.xml", encoding = "utf8"),
-			parser = new xml2js.Parser(),
+		var parser = new xml2js.Parser(),
 			moduleNamespaced = [],
-			dir;
+			dir, data;
+
+		if (path.existsSync("lib/src/build.xml")) {
+			dir = "lib/src/";
+		} else if (path.existsSync("src/build.xml")) {
+			dir = "src/";
+		} else {
+			console.log("ERR: Lib folder not found");
+			return;
+		}
+
+		data = fs.readFileSync(dir + "build.xml", encoding = "utf8");
 
 		if (moduleGroup && typeof moduleGroup === "string" && moduleGroup !== "") {
 			moduleNamespaced.push(moduleGroup);
@@ -171,7 +209,7 @@ yproject = {
 
 		moduleNamespaced.push(moduleName);
 
-		dir = moduleNamespaced[0];
+		dir += moduleNamespaced[0];
 
 		parser.addListener("end", function (result) {
 			var locals = {
@@ -180,10 +218,9 @@ yproject = {
 				moduleNamespaced: moduleNamespaced.join("-"),
 				moduleName: moduleName
 			};
-			yproject.copyDirSyncRecursive(__dirname + "/../templates/" + template, "lib/src/" + dir, locals);
+			yproject.copyDirSyncRecursive(__dirname + "/../templates/" + template, dir, locals);
 			
-			console.log("Done !");
-			console.log("Now edit the build.properties file to set the correct path to the builder\n");
+			console.log("Done! Successfully created " + moduleName + "!\n");
 			
 		});
 		parser.parseString(data);

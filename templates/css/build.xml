@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <%= moduleName %> Module Build File -->
+<project name="<%= projectName %>" default="all">
+	<description><%= moduleName %> Module</description>
+
+	<macrodef name="build-<%= moduleName %>">
+		<attribute name="target"/>
+		<sequential>
+			<subant target="@{target}">
+				<fileset dir="." includes="build.*.xml"/>
+			</subant>
+		</sequential>
+	</macrodef>
+
+	<target name="local">
+		<build-<%= moduleName %> target="local"/>
+	</target>
+	<target name="deploy">
+		<build-<%= moduleName %> target="deploy"/>
+	</target>
+	<target name="all">
+		<build-<%= moduleName %> target="all"/>
+	</target>
+	<target name="clean">
+		<build-<%= moduleName %> target="clean"/>
+	</target>
+</project>
