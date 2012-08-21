@@ -167,7 +167,7 @@ yproject = {
 		help: function (arglist) {
 			console.log("Usage:");
 			console.log("\t'yproject create my-project'\tCreate a project from scratch");
-			console.log("\t'yproject group my-group'\Add a group to the current project");
+			console.log("\t'yproject group my-group'\tAdd a group to the current project");
 			console.log("\t'yproject module my-module'\tAdd a module to the current project");
 			console.log("\t'yproject module my-group my-submodule'\tAdd a submodule to a group of the current project");
 			console.log("\t'yproject widget my-widget'\tAdd a widget module to the current project");
@@ -190,9 +190,11 @@ yproject = {
 			moduleNamespaced = [],
 			dir, data;
 
-		if (path.existsSync("lib/src/build.xml")) {
+		if (fs.existsSync("lib/src/build.xml")) {
 			dir = "lib/src/";
-		} else if (path.existsSync("src/build.xml")) {
+		} else if (fs.existsSync("fileadmin/templates/lib/src/build.xml")) {
+			dir = "fileadmin/templates/lib/src/";
+		} else if (fs.existsSync("src/build.xml")) {
 			dir = "src/";
 		} else {
 			console.log("ERR: Lib folder not found");
@@ -244,7 +246,7 @@ yproject = {
 			newDirLocation = newDirLocation.replace(k, locals[k]);
 		}
 		
-		if (!path.existsSync(newDirLocation)) {
+		if (!fs.existsSync(newDirLocation)) {
 			fs.mkdirSync(newDirLocation, checkDir.mode);
 			console.log("Created " + newDirLocation);
 		} else {
@@ -269,7 +271,7 @@ yproject = {
 
 				f = newDirLocation + "/" + fName;
 
-				if (!path.existsSync(f)) {
+				if (!fs.existsSync(f)) {
 					tpl = fs.readFileSync(origFile, encoding = "utf8");
 	
 					contents = ejs.render(tpl, {locals: locals});
